@@ -1,0 +1,10 @@
+cd ~
+mkdir miniconda
+cd miniconda
+wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh
+bash Miniconda3-latest-Linux-x86_64.sh -bfp /home/gwas/miniconda
+~/miniconda/bin/conda install pandas numpy scipy --yes
+pip install jupyter
+
+
+
