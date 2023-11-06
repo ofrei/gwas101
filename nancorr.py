@@ -1,4 +1,4 @@
-def nancorry(A,B):
+def nancorr(A,B):
     """
     NANCORR - Pearson correlation coefficient
     
