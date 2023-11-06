@@ -52,37 +52,19 @@ def get_snp_bytes(snp_geno, geno_map=None):
     return bytes(bb)
 
 
+def count_lines(filename):
+    with open(filename, 'r', encoding='utf-8', errors='ignore') as f:
+        return sum(1 for line in f)
+    
+BYTE_GENO_MAP = get_byte_geno_map()
 def read_bed(bfile_orig):
-    # Read original bfile
-    bim_path = f'{bfile_orig}.bim'
-    bim = pd.read_csv(bim_path, sep='\t', header=None)
-    fam_path = f'{bfile_orig}.fam'
-    fam = pd.read_csv(fam_path, delim_whitespace=True, header=None)
-    n_snps = bim.shape[0]
-    n_samples = fam.shape[0]
+    n_snps = count_lines(f'{bfile_orig}.bim')
+    n_samples = count_lines(f'{bfile_orig}.fam')
     print(f'    {n_snps} SNPs')
     print(f'    {n_samples} samples')
-    
-    # Read bed one SNP at a time
-    n_cols = n_samples//4
-    if 4*n_cols != n_samples:
-        n_cols += 1
-    bed_path = f'{bfile_orig}.bed'
-    bed = np.memmap(bed_path, dtype=np.uint8, offset=3, mode='r', shape=(n_snps, n_cols))
-    
-    byte_map = get_byte_geno_map()
-    geno_map = get_geno_byte_map()
-
-    geno = np.empty((n_snps, n_samples), dtype=np.int8 )
-    
-    for i_snp in range(n_snps):
-        snp_geno = get_snp_geno(bed, i_snp, n_samples, byte_map)
-        geno[i_snp, :] = snp_geno
-        if i_snp%1000 == 0:
-            print(f'    {i_snp+1} SNPs processed')
-        
+    bed = np.fromfile(f'{bfile_orig}.bed', dtype=np.uint8)[3:]
+    geno = BYTE_GENO_MAP[bed].reshape(n_snps, n_samples)
     return geno
-
 
 def write_bed(geno, bed_perm_path):
     n_snps = geno.shape[0]
