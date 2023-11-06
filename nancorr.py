@@ -16,6 +16,8 @@ def nancorr(A,B):
     """
     
     import numpy as np
+    A = A.copy()
+    B = B.copy()
 
     Am=~np.isfinite(A); Bm=~np.isfinite(B)
 
