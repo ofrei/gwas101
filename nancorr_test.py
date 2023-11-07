@@ -1,11 +1,11 @@
 import numpy as np
-import nancorr
+import gwas_tools
 A = np.random.rand(10, 3)
 B = np.random.rand(10, 2)
 
 A[1, 1] = np.nan
 
-r,t,n = nancorr.nancorr(A, B)
+r,t,n = gwas_tools.nancorr(A, B)
 
 for i in range(A.shape[1]):
     for j in range(B.shape[1]):
