@@ -71,10 +71,10 @@ def read_bed(bedprefix, snps=None, num_samples=None):
 
     genomat = np.zeros(shape=(len(snp_list), nsubj), dtype=np.int8)
     with open(f'{bedprefix}.bed', "rb") as bedid:
-        for snp_index in snp_list:
+        for i, snp_index in enumerate(snp_list):
             bedid.seek(3+n_bytes*snp_index, 0)
             bed = np.frombuffer(bedid.read(n_bytes), dtype=np.uint8)
-            genomat[snp_index, :] = BYTE_GENO_MAP[bed].ravel()[:nsubj]
+            genomat[i, :] = BYTE_GENO_MAP[bed].ravel()[:nsubj]
     return genomat
 
 def write_bed(geno, bed_perm_path):
