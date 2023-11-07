@@ -55,15 +55,23 @@ def get_snp_bytes(snp_geno, geno_map=None):
 def count_lines(filename):
     with open(filename, 'r', encoding='utf-8', errors='ignore') as f:
         return sum(1 for line in f)
-    
+
+
 BYTE_GENO_MAP = get_byte_geno_map()
+
+
 def read_bed(bfile_orig):
     n_snps = count_lines(f'{bfile_orig}.bim')
     n_samples = count_lines(f'{bfile_orig}.fam')
+    n_cols = n_samples//4
+    if 4*n_cols != n_samples:
+        n_cols += 1
     print(f'    {n_snps} SNPs')
     print(f'    {n_samples} samples')
     bed = np.fromfile(f'{bfile_orig}.bed', dtype=np.uint8)[3:]
-    geno = BYTE_GENO_MAP[bed].reshape(n_snps, n_samples)
+    geno = BYTE_GENO_MAP[bed].reshape(n_snps, 4*n_cols)
+    if (n_samples % 4) != 0:
+        geno = geno[:, :n_samples]
     return geno
 
 def write_bed(geno, bed_perm_path):
