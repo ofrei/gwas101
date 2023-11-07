@@ -60,19 +60,22 @@ def count_lines(filename):
 BYTE_GENO_MAP = get_byte_geno_map()
 
 
-def read_bed(bfile_orig, num_snps=None, num_samples=None):
-    n_snps = count_lines(f'{bfile_orig}.bim') if num_snps is None else num_snps
-    n_samples = count_lines(f'{bfile_orig}.fam') if num_samples is None else num_samples
-    n_cols = n_samples//4
-    if 4*n_cols != n_samples:
-        n_cols += 1
-    print(f'    {n_snps} SNPs')
-    print(f'    {n_samples} samples')
-    bed = np.fromfile(f'{bfile_orig}.bed', dtype=np.uint8)[3:]
-    geno = BYTE_GENO_MAP[bed].reshape(n_snps, 4*n_cols)
-    if (n_samples % 4) != 0:
-        geno = geno[:, :n_samples]
-    return geno
+def read_bed(bedprefix, snps=None, num_samples=None):
+    snp_list = list(range(count_lines(f'{bedprefix}.bim'))) if snps is None else snps
+    nsubj = count_lines(f'{bedprefix}.fam') if num_samples is None else num_samples
+    n_bytes = nsubj//4
+    if 4*n_bytes != nsubj:
+        n_bytes += 1
+    print(f'    {len(snp_list)} SNPs')
+    print(f'    {nsubj} samples')
+
+    genomat = np.zeros(shape=(len(snp_list), nsubj), dtype=np.int8)
+    with open(f'{bedprefix}.bed', "rb") as bedid:
+        for snp_index in snp_list:
+            bedid.seek(3+n_bytes*snp_index, 0)
+            bed = np.frombuffer(bedid.read(n_bytes), dtype=np.uint8)
+            genomat[snp_index, :] = BYTE_GENO_MAP[bed].ravel()[:nsubj]
+    return genomat
 
 def write_bed(geno, bed_perm_path):
     n_snps = geno.shape[0]
