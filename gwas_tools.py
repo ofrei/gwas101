@@ -60,9 +60,9 @@ def count_lines(filename):
 BYTE_GENO_MAP = get_byte_geno_map()
 
 
-def read_bed(bfile_orig):
-    n_snps = count_lines(f'{bfile_orig}.bim')
-    n_samples = count_lines(f'{bfile_orig}.fam')
+def read_bed(bfile_orig, num_snps=None, num_samples=None):
+    n_snps = count_lines(f'{bfile_orig}.bim') if num_snps is None else num_snps
+    n_samples = count_lines(f'{bfile_orig}.fam') if num_samples is None else num_samples
     n_cols = n_samples//4
     if 4*n_cols != n_samples:
         n_cols += 1
