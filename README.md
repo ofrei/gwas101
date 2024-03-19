@@ -7,3 +7,7 @@ This repo has some misc examples and helper scripts dealing with genotype data a
 * [sumstats/clean_scz2_gwas.ipynb](sumstats/clean_scz2_gwas.ipyn) and [sumstats/manipulate_gwas_sumstats.ipynb](sumstats/manipulate_gwas_sumstats.ipynb) give few examples of dealing with external summary statistics. 
 * [sumstats/sumstats/daner_PGC_SCZ52_0513a.hq2.yaml](sumstats/sumstats/daner_PGC_SCZ52_0513a.hq2.yaml) gives an example of a .yaml file needed for https://github.com/BioPsyk/cleansumstats pipeline.
 * [snp_canonic_id.ipynb](snp_canonic_id.ipynb) is not something you want to use, just ignore this!
+
+# openSNP
+
+Another useful resource is https://github.com/ofrei/opensnp, see its README file for more info.
