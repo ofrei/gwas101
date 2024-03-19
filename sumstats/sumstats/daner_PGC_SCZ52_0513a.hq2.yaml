@@ -1,0 +1,13 @@
+cleansumstats_metafile_kind: minimal
+col_CHR: CHR
+col_EffectAllele: A1
+col_OtherAllele: A2
+col_SNP: SNP
+col_POS: BP
+col_OR: OR
+col_P: P
+col_SE: SE
+col_INFO: INFO
+path_sumStats: daner_PGC_SCZ52_0513a.hq2.gz
+stats_Model: logistic
+stats_neglog10P: false
